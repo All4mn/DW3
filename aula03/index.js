@@ -1,20 +1,9 @@
 import Fastify from 'fastify'
 import cors from '@fastify/cors'
-import fs from 'fs'
-import path from 'path'
-import { fileURLToPath } from 'url'
-import fastifyStatic from '@fastify/static'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
 
 const server = Fastify({})
 const PORT = 3000
-
-// Registrar plugin de arquivos estáticos
-server.register(fastifyStatic, {
-  root: __dirname
-})
 
 // Registramos o plugin de CORS para permitir que qualquer origem acesse nossa API
 server.register(cors, {
@@ -42,10 +31,6 @@ const start = async () => {
 }
 
 // Servir HTML
-server.get('/', async(request, reply) => {
-  const html = fs.readFileSync(path.join(__dirname, 'index-completo.html'), 'utf-8')
-  reply.type('text/html').send(html)
-})
 
 server.get('/tarefas', async(request, reply)=>{
   return reply.send(tarefas)

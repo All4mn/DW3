@@ -27,3 +27,26 @@ DELETE http://localhost:3000/tarefas/1
 
 ### Testando rota que não existe para acionar nosso Handler Customizado
 GET http://localhost:3000/batata-frita
+
+### Buscar por descrição
+GET http://localhost:3000/tarefas?busca=comprar
+
+### Buscar apenas concluídas
+GET http://localhost:3000/tarefas?concluido=true
+
+### Busca combinada (descrição + status)
+GET http://localhost:3000/tarefas?busca=fazer&concluido=false
+
+### Testar validação (enviando sem descrição)
+POST http://localhost:3000/tarefas
+Content-Type: application/json
+
+{
+    "concluido": false
+}
+
+### Alternar o status da tarefa de ID 1
+PATCH http://localhost:3000/tarefas/1/concluir
+
+### Ver resumo estatístico
+GET http://localhost:3000/tarefas/resumo

@@ -32,14 +32,31 @@ const start = async () => {
 
 // Servir HTML
 
+//Exercicio 1
 server.get('/tarefas', async(request, reply)=>{
-  return reply.send(tarefas)
+  
+  const { busca, concluido } = request.query
+  let resultado = tarefas
+
+  if (busca) {
+    resultado = resultado.filter(t => t.descricao.toLowerCase().includes(busca.toLowerCase()))
+  }
+  if (concluido === 'true' || concluido === 'false') {
+    const concluidoBool = concluido.toLowerCase() === 'true'
+    resultado = resultado.filter(t => t.concluido === concluidoBool)
+  }
+
+  return reply.send(resultado)
   
 })
 
+//Exercicio 2
 server.post('/tarefas', async(request, reply)=>{
   const tarefa = request.body
   // Gerando um ID automaticamente no Backend (simulando um Banco de Dados)
+  if (!tarefa.descricao || typeof tarefa.descricao !== 'string' || tarefa.descricao.trim() === '') {
+    return reply.status(400).send({ status: 'error', message: 'Descrição inválida' })
+  }
   const novoId = tarefas.length > 0 ? tarefas[tarefas.length - 1].id + 1 : 1
   const novaTarefa = { id: novoId, ...tarefa }
 
@@ -87,6 +104,26 @@ server.patch('/tarefas/:id', async (request, reply) => {
 
   // Retornamos a tarefa atualizada como resposta. O status padrão 200 (OK) é aplicado automaticamente.
   return reply.send(tarefas[index])
+})
+
+//Exercicio 3
+server.patch('/tarefas/:id/concluir', async (request, reply) => {
+  const id = Number(request.params.id)
+  const index = tarefas.findIndex(t => t.id === id)
+  if (index === -1) {
+      return reply.status(404).send({ status: 'error', message: 'Tarefa não encontrada' })
+  }
+  tarefas[index].concluido = !tarefas[index].concluido
+  return reply.send(tarefas[index])
+})
+
+//Exercicio 4
+server.get('/tarefas/resumo', async (request, reply) => {
+  const total = tarefas.length
+  const concluidas = tarefas.filter(t => t.concluido).length
+  const pendentes = total - concluidas
+  
+  return reply.send({ total, concluidas, pendentes: pendentes })
 })
 
 server.delete('/tarefas/:id', async (request, reply) => {

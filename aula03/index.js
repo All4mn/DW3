@@ -30,8 +30,6 @@ const start = async () => {
   }
 }
 
-// Servir HTML
-
 //Exercicio 1
 server.get('/tarefas', async(request, reply)=>{
   

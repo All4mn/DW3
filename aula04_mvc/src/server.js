@@ -21,7 +21,6 @@ server.setNotFoundHandler((request, reply) => {
 });
 
 const PORT = 3000;
-
 const start = async () => {
   try {
     await server.listen({ port: PORT });

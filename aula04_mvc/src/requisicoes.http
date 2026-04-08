@@ -1,0 +1,54 @@
+	
+@url = http://localhost:3000
+
+GET {{url}}/tarefas
+
+###
+GET {{url}}/tarefas/1
+
+### Buscando tarefas por Query String (Filtro)
+GET {{url}}/tarefas?busca=estudar
+
+### Ver resumo estatístico
+GET {{url}}/tarefas/resumo
+
+### Buscar apenas concluídas
+GET {{url}}/tarefas?concluido=true
+
+### Busca combinada (descrição + status)
+GET {{url}}/tarefas?busca=fazer&concluido=false
+
+###
+POST {{url}}/tarefas
+Content-Type: application/json
+
+{
+    "descricao": "Tarefa de casa",
+    "concluido": false
+}
+
+###
+PATCH  {{url}}/tarefas/1/concluir
+
+###
+PATCH {{url}}/tarefas/5
+Content-Type: application/json
+
+{
+    "descricao": "Fazer compras no mercado",
+    "concluido": true
+}
+
+###
+DELETE {{url}}/tarefas/1
+
+### teste de descrição obrigatoria
+POST {{url}}/tarefas
+Content-Type: application/json
+
+{
+    "concluido": false
+}
+
+### Forçando erro 404 no NotFoundHandler
+GET {{url}}/batata-frita

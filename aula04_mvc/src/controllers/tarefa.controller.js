@@ -1,47 +1,106 @@
+import { listar, criar, buscarPorId, atualizar, alternarConcluido, remover, resumo } from "../models/tarefa.model.js";
+
+// Processa requisições da rota `GET /tarefas`
+export async function listarTarefas(request, reply) {
+  // LOG para indicar que a função foi chamada
+  console.log("Controller: listarTarefas chamado");
+
+  // request.query acessa os parâmetros passados na URL após o '?' (ex: ?busca=estudar)
+  const {busca, concluido = false} = request.query;
+
+  const resultado = await listar ({busca,concluido})
+
+  return reply.send(resultado);
+}
+
+// Processa requisições da rota `POST /tarefas`
+export async function criarTarefa(request, reply) {
+
+  console.log("Controller: criarTarefas chamado");
+
+  const { descricao } = request.body;
+  
+  const novaTarefa = await criar(descricao)
+  
+  return reply.status(201).send(novaTarefa);
+}
+
+// Processa requisições da rota `GET /tarefas/resumo`
+export async function obterResumo(request, reply) {
+    console.log("Controller: obterResumo chamado");
+
+    const total = tarefas.length;
+    const concluidas = tarefas.filter((t) => t.concluido).length;
+    const pendentes = total - concluidas;
+
+    return reply.send({
+      total,
+      concluidas,
+      pendentes,
+    });
+}
+
+// Processa requisições da rota `GET /tarefas/:id`
+export async function obterTarefa(request, reply) {
+    console.log("Controller: obterTarefa chamado")
+
+    const id = Number(request.params.id);
+
+    const tarefa = await buscarPorId(id)
+
+    reply.send(tarefa);
+}
+
+// Processa requisições da rota `PATCH /tarefas/:id`
+export async function atualizarTarefa(request, reply) {
+    console.log("Controler: atualizarTarefa chamado")
     
-    // DADOS utilizados pelas requisições relacionadas às tarefas.
-    const tarefas = [
-        { id: 1, descricao: "Fazer compras", concluido: false },
-        { id: 2, descricao: "Lavar o carro", concluido: false },
-        { id: 3, descricao: "Estudar Fastify", concluido: true },
-        { id: 4, descricao: "Estudar JavaScript", concluido: true },
-      ];
+    const id = Number(request.params.id);
+    const index = tarefas.findIndex((t) => t.id === id);
 
-    // Processa requisições da rota `GET /tarefas`
-    export async function listarTarefas(request, reply) { 
-
-        // LOG para indicar que a função foi chamada
-        console.log("Controller: listarTarefas chamado")
-
-        // request.query acessa os parâmetros passados na URL após o '?' (ex: ?busca=estudar)
-        const busca = request.query.busca;
-
-        if (busca) {
-            // Filtra as tarefas garantindo a busca correta independente de maiúsculas/minúsculas
-            const tarefasFiltradas = tarefas.filter((t) =>
-            t.descricao.toLowerCase().includes(busca.toLowerCase()),
-            );
-            return reply.send(tarefasFiltradas);
-        }
-
-        return reply.send(tarefas);
-
+    if (index === -1) {
+      return reply
+        .status(404)
+        .send({ status: "error", message: "Tarefa não encontrada" });
     }
 
-    // Processa requisições da rota `POST /tarefas`
-    export async function criarTarefa(request, reply) { }
+    const tarefaAtualizada = request.body;
+    tarefas[index] = { ...tarefas[index], ...tarefaAtualizada, id };
 
-    // Processa requisições da rota `GET /tarefas/resumo`
-    export async function obterResumo(request, reply) { }
+    return reply.send(tarefas[index]);
+}
 
-    // Processa requisições da rota `GET /tarefas/:id`
-    export async function obterTarefa(request, reply) { }
+// Processa requisições da rota `PATCH /tarefas/:id/concluir`
+export async function concluirTarefa(request, reply) {
+    console.log("Controler: concluirTarefa chamado")
 
-    // Processa requisições da rota `PATCH /tarefas/:id`
-    export async function atualizarTarefa(request, reply) { }
+    const id = Number(request.params.id);
+    const index = tarefas.findIndex((t) => t.id === id);
 
-    // Processa requisições da rota `PATCH /tarefas/:id/concluir`
-    export async function concluirTarefa(request, reply) { }
+    if (index === -1) {
+      return reply
+        .status(404)
+        .send({ status: "error", message: "Tarefa não encontrada" });
+    }
 
-    // Processa requisições da rota `DELETE /tarefas/:id`
-    export async function removerTarefa(request, reply) { }
+    tarefas[index].concluido = !tarefas[index].concluido;
+    return reply.send(tarefas[index]);
+}
+
+// Processa requisições da rota `DELETE /tarefas/:id`
+export async function removerTarefa(request, reply) {
+    console.log("Controler: removerTarefa chamado")
+
+    const id = Number(request.params.id);
+    const index = tarefas.findIndex((t) => t.id === id);
+
+    if (index === -1) {
+      return reply
+        .status(404)
+        .send({ status: "error", message: "Tarefa não encontrada" });
+    }
+
+    tarefas.splice(index, 1);
+    // 204 No Content indica sucesso sem corpo de resposta
+    return reply.status(204).send();
+}

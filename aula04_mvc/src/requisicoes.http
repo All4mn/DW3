@@ -4,6 +4,9 @@
 GET {{url}}/tarefas
 
 ###
+GET {{url}}/tarefas/pendentes
+
+###
 GET {{url}}/tarefas/1
 
 ### Buscando tarefas por Query String (Filtro)
@@ -31,11 +34,11 @@ Content-Type: application/json
 PATCH  {{url}}/tarefas/1/concluir
 
 ###
-PATCH {{url}}/tarefas/5
+PATCH {{url}}/tarefas/3
 Content-Type: application/json
 
 {
-    "descricao": "Fazer compras no mercado",
+    "descricao": "Fazer compras no mercado"
     "concluido": true
 }
 

@@ -1,0 +1,27 @@
+## Validação
+
+Indique em qual(is) camada(s) (Routes, Controller ou Model) as seguintes validações deveriam ficar e justifique sua escolha:
+
+1. Verificar se a descrição da tarefa não está vazia ao criar uma nova tarefa.
+**Camada**: Model
+**Justificativa**: Esta camada é responsável pela lógica de negócio e pelos dados, incluindo as regras para manipular, acessar e persistir essas informações. É a única camada que "conversa" diretamente com o banco de dados.
+
+2. Verificar se o ID da tarefa existe antes de tentar atualizar ou remover uma tarefa.
+**Camada**: Model
+**Justificativa**:Esta camada é responsável pela lógica de negócio e pelos dados, incluindo as regras para manipular, acessar e persistir essas informações. É a única camada que "conversa" diretamente com o banco de dados.
+
+3. Verificar se os parâmetros de consulta (query) são válidos ao listar as tarefas (por exemplo, se o valor de concluido é true ou false).
+**Camada**: Model
+**Justificativa**:Esta camada é responsável pela lógica de negócio e pelos dados, incluindo as regras para manipular, acessar e persistir essas informações. É a única camada que "conversa" diretamente com o banco de dados.
+
+4. Converter o parâmetro id vindo da URL (que chega como string) para um número (Number) antes de buscar os dados.
+**Camada**: Controller
+**Justificativa**:Atua como o intermediário entre o Model e a View. Ele recebe as requisições do cliente, aciona as devidas atualizações no Model e, por fim, seleciona e envia a View (a resposta JSON) de volta
+
+5. Impedir a remoção de uma tarefa que já esteja marcada como "concluída" (regra para preservar o histórico de produtividade).
+**Camada**: Model
+**Justificativa**:Esta camada é responsável pela lógica de negócio e pelos dados, incluindo as regras para manipular, acessar e persistir essas informações. É a única camada que "conversa" diretamente com o banco de dados.
+
+6. Verificar se o usuário já atingiu o limite máximo de 10 tarefas pendentes antes de permitir a criação de uma nova.
+**Camada**: Model
+**Justificativa**:Esta camada é responsável pela lógica de negócio e pelos dados, incluindo as regras para manipular, acessar e persistir essas informações. É a única camada que "conversa" diretamente com o banco de dados.

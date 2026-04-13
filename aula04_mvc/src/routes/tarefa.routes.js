@@ -1,4 +1,4 @@
-import { atualizarTarefa, concluirTarefa, criarTarefa, listarTarefas, obterResumo, obterTarefa, removerTarefa } from "../controllers/tarefa.controller.js";
+import { atualizarTarefa, concluirTarefa, criarTarefa, listarTarefas, obterResumo, obterTarefa, removerTarefa, listarPendentes } from "../controllers/tarefa.controller.js";
 
 export async function tarefaRoutes(server, options) {
 
@@ -13,6 +13,14 @@ export async function tarefaRoutes(server, options) {
     console.log("Routes: GET /tarefas chamada");
 
     listarTarefas(request,reply)
+  });
+
+  server.get("/pendentes", async (request, reply) => {
+    
+    // LOG para indicar que a rota foi chamada
+    console.log("Routes: GET /pendentes chamada");
+
+    listarPendentes(request,reply)
   });
 
   server.post("/", async (request, reply) => {

@@ -1,89 +1,90 @@
-import { listar, criar, buscarPorId, atualizar, alternarConcluido, remover, resumo, pendentes } from "../models/tarefa.model.js";
+import model from "../models/tarefa.model.js";
 
-// Processa requisições da rota `GET /tarefas`
-export async function listarTarefas(request, reply) {
-  // LOG para indicar que a função foi chamada
-  console.log("Controller: listarTarefas chamado");
+class TarefaControler {
+  constructor() {
+    this.model = model;
+  }
 
-  // request.query acessa os parâmetros passados na URL após o '?' (ex: ?busca=estudar)
-  const {busca, concluido} = request.query;
+  async listarTarefas(request, reply) {
+    // LOG para indicar que a função foi chamada
+    console.log("Controller: listarTarefas chamado");
 
-  const resultado = await listar ({busca,concluido})
+    // request.query acessa os parâmetros passados na URL após o '?' (ex: ?busca=estudar)
+    const { busca, concluido } = request.query;
 
-  return reply.send(resultado);
-}
-
-export async function listarPendentes(request, reply) {
-  // LOG para indicar que a função foi chamada
-  console.log("Controller: listarTarefas chamado");
-
-  // request.query acessa os parâmetros passados na URL após o '?' (ex: ?busca=estudar)
-  const {busca, concluido = false} = request.query;
-
-  const resultado = await pendentes ({busca,concluido})
-
-  return reply.send(resultado);
-}
-
-// Processa requisições da rota `POST /tarefas`
-export async function criarTarefa(request, reply) {
-  console.log("Controller: criarTarefas chamado");
-
-  const { descricao } = request.body;
-  
-  const novaTarefa = await criar(descricao)
-  
-  return reply.status(201).send(novaTarefa);
-}
-
-// Processa requisições da rota `GET /tarefas/resumo`
-export async function obterResumo(request, reply) {
-    console.log("Controller: obterResumo chamado");
-
-    const resultado = await resumo()
+    const resultado = await this.model.listar({ busca, concluido });
 
     return reply.send(resultado);
-}
+  }
 
-// Processa requisições da rota `GET /tarefas/:id`
-export async function obterTarefa(request, reply) {
-    console.log("Controller: obterTarefa chamado")
+  async listarPendentes(request, reply) {
+    // LOG para indicar que a função foi chamada
+    console.log("Controller: listarTarefas chamado");
+
+    // request.query acessa os parâmetros passados na URL após o '?' (ex: ?busca=estudar)
+    const { busca, concluido = false } = request.query;
+
+    const resultado = await this.model.pendentes({ busca, concluido });
+
+    return reply.send(resultado);
+  }
+
+  async criarTarefa(request, reply) {
+    console.log("Controller: criarTarefas chamado");
+
+    const { descricao } = request.body;
+
+    const novaTarefa = await this.model.criar(descricao);
+
+    return reply.status(201).send(novaTarefa);
+  }
+
+  async obterResumo(request, reply) {
+    console.log("Controller: obterResumo chamado");
+
+    const resultado = await this.model.resumo();
+
+    return reply.send(resultado);
+  }
+
+  async obterTarefa(request, reply) {
+    console.log("Controller: obterTarefa chamado");
 
     const id = Number(request.params.id);
 
-    const tarefa = await buscarPorId(id)
+    const tarefa = await this.model.buscarPorId(id);
 
     reply.send(tarefa);
-}
+  }
 
-// Processa requisições da rota `PATCH /tarefas/:id`
-export async function atualizarTarefa(request, reply) {
-    console.log("Controler: atualizarTarefa chamado")
-    
+  async atualizarTarefa(request, reply) {
+    console.log("Controler: atualizarTarefa chamado");
+
     const id = Number(request.params.id);
     const tarefaAtualizada = request.body;
 
-    const tarefa = await atualizar(id, tarefaAtualizada)
+    const tarefa = await this.model.atualizar(id, tarefaAtualizada);
 
     return reply.send(tarefa);
-}
+  }
 
-// Processa requisições da rota `PATCH /tarefas/:id/concluir`
-export async function concluirTarefa(request, reply) {
-    console.log("Controler: concluirTarefa chamado")
+  async concluirTarefa(request, reply) {
+    console.log("Controler: concluirTarefa chamado");
 
     const id = Number(request.params.id);
-    const tarefa = await alternarConcluido(id)
+    const tarefa = await this.model.alternarConcluido(id);
     return reply.send(tarefa);
-}
+  }
 
-// Processa requisições da rota `DELETE /tarefas/:id`
-export async function removerTarefa(request, reply) {
-    console.log("Controler: removerTarefa chamado")
+  async removerTarefa(request, reply) {
+    console.log("Controler: removerTarefa chamado");
 
     const id = Number(request.params.id);
-    await remover(id)
+    await this.model.remover(id);
 
     // 204 No Content indica sucesso sem corpo de resposta
     return reply.status(204).send();
+  }
 }
+
+export default new TarefaControler()

@@ -1,0 +1,30 @@
+
+GET http://localhost:3000/produtos
+
+###
+
+GET http://localhost:3000/produtos/1
+
+###
+
+POST http://localhost:3000/produtos
+Content-Type: application/json
+
+{ "nome": "Teclado", "preco": 200 }
+
+###
+
+DELETE http://localhost:3000/produtos/1
+
+###
+
+POST http://localhost:3000/produtos
+Content-Type: application/json
+
+
+###
+
+POST http://localhost:3000/produtos
+Content-Type: application/json
+
+{ "nome": "", "preco": -5 }

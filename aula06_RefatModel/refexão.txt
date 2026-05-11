@@ -1,0 +1,25 @@
+## Reflexão sobre OO
+
+Responda às perguntas abaixo com base no que foi visto neste roteiro:
+
+1. Qual é a diferença entre uma **classe** e uma **instância**? Por que exportamos `new TarefaModel()` em vez de exportar a própria classe `TarefaModel`?
+
+R: Uma classe é um molde para criar objetos. Uma instância é um objeto concreto criado a partir desse molde. Cada instância tem seu próprio estado, independente das demais. Nós exportamos um `new TarefaModel()` para ter uma unica instancia compartilhada e trabalhar com os mesmos dados.
+
+-----------------------
+
+2. No `TarefaController`, o `constructor` armazena a referência ao model em `this.model`. O que aconteceria se, em vez disso, cada método do controller importasse o model diretamente? Que problema isso poderia causar?
+
+R: Alguns dos problemas seria a dificuldade para realizar testes e manunteções fora que os varios imports desnecessarios deixarem o codigo sujo.
+
+-----------------------
+
+3. Por que o arquivo `tarefa.routes.js` **não** foi transformado em uma classe, mesmo que tecnicamente fosse possível?
+
+R: A Orientação a Objetos faz mais sentido quando existe uma entidade com dados próprios e comportamentos associados a esses dados. As rotas, por outro lado, são pura configuração: elas apenas mapeiam um verbo HTTP + um caminho para uma função. Não há dados para encapsular, não há estado para manter. Transformar isso em uma classe não traria nenhum benefício real — seria estrutura pela estrutura, sem ganho de organização ou legibilidade.
+
+-----------------------
+
+4. O roteiro menciona o **problema do `this` em callbacks**. Descreva com suas próprias palavras quando esse problema ocorre e qual é a solução mais comum em JavaScript moderno.
+
+R: Esse problema ocorre quando chamamos uma função como callback, causando a criação de um novo "this" e perdendo o referencial antigo. A solução para contronar esse problema usada em JavaScript moderno é o uso de ArrowFunction para callback pois ela herda o "this" do escopo onde foi definida.

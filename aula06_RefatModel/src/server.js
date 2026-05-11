@@ -1,34 +1,31 @@
-import Fastify from "fastify";
-import cors from "@fastify/cors";
-import { tarefaRoutes } from "./routes/tarefa.routes.js";
+import Fastify from 'fastify'
+import cors from '@fastify/cors'
 
-const server = Fastify();
+import tarefaRoutes from './routes/tarefa.routes.js'
+import TarefaRepository from './repositories/tarefa.repository.js'
+import TarefaService from './services/tarefa.service.js'
+import TarefaController from './controllers/tarefa.controller.js'
 
-// Habilita o CORS para permitir requisições do Frontend
+const server = Fastify()
+
 server.register(cors, {
-  origin: "*",
-  methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
-});
+  origin: '*',
+  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
+})
 
-// inclui o a rota de tarefas no server
-server.register(tarefaRoutes, {prefix: '/tarefas'});
+// Composition Root: criação e conexão das dependências
+const repository = new TarefaRepository()
+const service = new TarefaService(repository)
+const controller = new TarefaController(service)
 
-server.setNotFoundHandler((request, reply) => {
-  reply.code(404).send({
-    status: "error",
-    message: "O recurso solicitado não existe nesta API.",
-  });
-});
+// Registra as rotas, passando o controller via options
+server.register(tarefaRoutes, { controller })
 
-const PORT = 3000;
-const start = async () => {
-  try {
-    await server.listen({ port: PORT });
-    console.log(`Servidor rodando em http://localhost:${PORT}`);
-  } catch (erro) {
-    console.error(erro);
-    process.exit(1);
+const PORT = 3000
+server.listen({ port: PORT }, (err) => {
+  if (err) {
+    console.error(err)
+    process.exit(1)
   }
-};
-
-start();
+  console.log(`Servidor rodando em http://localhost:${PORT}`)
+})

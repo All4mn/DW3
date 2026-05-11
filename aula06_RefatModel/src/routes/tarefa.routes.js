@@ -1,51 +1,43 @@
-import controler from "../controllers/tarefa.controller.js";
+export default async function tarefaRoutes(server, options) {
+  const { controller } = options    // ← recebe o controller de fora
 
-export async function tarefaRoutes(server, options) {
-  // ATENÇÃO À ORDEM DAS ROTAS: Rotas estáticas (como /resumo) devem
-  // vir antes de rotas com parâmetros dinâmicos (como /:id) para evitar
-  // que "resumo" seja interpretado como um :id pelo servidor.
+  server.get('/tarefas', async (request, reply) => {
+    console.log("Routes: GET /tarefas chamada")
+    controller.listarTarefas(request, reply)
+  })
 
-  server.get("/", async (request, reply) => {
-    // LOG para indicar que a rota foi chamada
-    console.log("Routes: GET /tarefas chamada");
+  server.get('/tarefas/pendentes', async (request, reply) => {
+    console.log("Routes: GET /tarefas/pendentes chamada")
+    controller.obterPendentes(request, reply)
+  })
 
-    controler.listarTarefas(request, reply);
-  });
+  server.post('/tarefas', async (request, reply) => {
+    console.log("Routes: POST /tarefas chamada")
+    controller.criarTarefa(request, reply)
+  })
 
-  server.get("/pendentes", async (request, reply) => {
-    // LOG para indicar que a rota foi chamada
-    console.log("Routes: GET /pendentes chamada");
+  server.get('/tarefas/resumo', async (request, reply) => {
+    console.log("Routes: GET /tarefas/resumo chamada")
+    controller.obterResumo(request, reply)
+  })
 
-    controler.listarPendentes(request, reply);
-  });
+  server.get('/tarefas/:id', async (request, reply) => {
+    console.log("Routes: GET /tarefas/:id chamada")
+    controller.obterTarefa(request, reply)
+  })
 
-  server.post("/", async (request, reply) => {
-    console.log("Routes: POST /tarefas chamada");
-    controler.criarTarefa(request, reply);
-  });
+  server.patch('/tarefas/:id', async (request, reply) => {
+    console.log("Routes: PATCH /tarefas/:id chamada")
+    controller.atualizarTarefa(request, reply)
+  })
 
-  server.get("/resumo", async (request, reply) => {
-    console.log("Routes: GET /resumo chamada");
-    controler.obterResumo(request, reply);
-  });
+  server.patch('/tarefas/:id/concluir', async (request, reply) => {
+    console.log("Routes: PATCH /tarefas/:id/concluir chamada")
+    controller.concluirTarefa(request, reply)
+  })
 
-  server.get("/:id", async (request, reply) => {
-    console.log("Routes: GET /:id chamado");
-    controler.obterTarefa(request, reply);
-  });
-
-  server.patch("/:id", async (request, reply) => {
-    console.log("Routes: PATCH /:id chamado");
-    controler.atualizarTarefa(request, reply);
-  });
-
-  server.patch("/:id/concluir", async (request, reply) => {
-    console.log("Routes: PATCH /:id/concluir chamado");
-    controler.concluirTarefa(request, reply);
-  });
-
-  server.delete("/:id", async (request, reply) => {
-    console.log("Routes: DELETE /:id chamado");
-    controler.removerTarefa(request, reply);
-  });
+  server.delete('/tarefas/:id', async (request, reply) => {
+    console.log("Routes: DELETE /tarefas/:id chamada")
+    controller.removerTarefa(request, reply)
+  })
 }

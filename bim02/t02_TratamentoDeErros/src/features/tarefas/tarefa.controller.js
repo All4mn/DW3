@@ -13,12 +13,6 @@ class TarefaController {
   async criarTarefa(request, reply) {
     console.log("Controller: criarTarefa chamado")
     const { descricao } = request.body
-    if (!descricao || descricao.trim() === '') {
-      return reply.status(400).send({
-        status: 'error',
-        message: 'A descrição da tarefa é obrigatória'
-      })
-    }
     const novaTarefa = await this.service.criar(descricao)
     return reply.status(201).send(novaTarefa)
   }
@@ -27,9 +21,6 @@ class TarefaController {
     console.log("Controller: obterTarefa chamado")
     const id = Number(request.params.id)
     const tarefa = await this.service.buscarPorId(id)
-    if (!tarefa) {
-      return reply.status(404).send({ status: 'error', message: 'Tarefa não encontrada' })
-    }
     return reply.send(tarefa)
   }
 
@@ -37,9 +28,6 @@ class TarefaController {
     console.log("Controller: atualizarTarefa chamado")
     const id = Number(request.params.id)
     const tarefa = await this.service.atualizar(id, request.body)
-    if (!tarefa) {
-      return reply.status(404).send({ status: 'error', message: 'Tarefa não encontrada' })
-    }
     return reply.send(tarefa)
   }
 
@@ -47,9 +35,6 @@ class TarefaController {
     console.log("Controller: concluirTarefa chamado")
     const id = Number(request.params.id)
     const tarefa = await this.service.alternarConcluido(id)
-    if (!tarefa) {
-      return reply.status(404).send({ status: 'error', message: 'Tarefa não encontrada' })
-    }
     return reply.send(tarefa)
   }
 
@@ -57,23 +42,9 @@ class TarefaController {
     console.log("Controller: removerTarefa chamado")
     const id = Number(request.params.id)
     const removido = await this.service.remover(id)
-    if (!removido) {
-      return reply.status(404).send({ status: 'error', message: 'Tarefa não encontrada' })
-    }
     return reply.status(204).send()
   }
-
-  async obterResumo(request, reply) {
-    console.log("Controller: obterResumo chamado")
-    const resumo = await this.service.obterResumo()
-    return reply.send(resumo)
-  }
-
-  async obterPendentes(request, reply) {
-    console.log("Controller: obterPendentes chamado")
-    const pendentes = await this.service.listarPendentes()
-    return reply.send(pendentes)
-  }
+  
 }
 
 export default TarefaController

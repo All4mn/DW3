@@ -3,8 +3,7 @@ import TarefaService from './tarefa.service.js'
 import TarefaController from './tarefa.controller.js'
 
 
-export default async function tarefaRoutes(server, options) {
-  //const { controller } = options    // ← recebe o controller de fora
+export default async function tarefaRoutes(server) {
   const repository = new TarefaRepository()
   const service = new TarefaService(repository)
   const controller = new TarefaController(service)

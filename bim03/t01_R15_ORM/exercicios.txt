@@ -1,0 +1,40 @@
+### Exercício 1 — Explicar a entrada do ORM
+
+Com suas palavras, explique por que o ORM entra depois de SQL puro nesta trilha.
+
+R: O SLQ vem primeiro para conseguir-mos aprende sua estrutura de funcionamento basica, após domina-la, conseguimos implementar e utilizar o ORM com sabedoria 
+
+### Exercício 2 — Mapear `projetos`
+
+No `src/database/schema.js`, acrescente a representação da tabela `projetos`, usando a estrutura real criada no Roteiro 13.
+
+### Exercício 3 — Ler projetos com Drizzle
+
+Crie `src/scripts/lista-projetos-drizzle.js`, importe `db` e o schema de `projetos`, e liste os projetos ordenados pelo identificador.
+
+### Exercício 4 — Comparar uma operação
+
+Escolha listar tarefas ou inserir uma tarefa. Escreva uma versão em SQL puro e outra em Drizzle. Compare legibilidade, controle, volume de código e proximidade com o banco.
+
+Versão SQL puro:
+const resultado = await pool.query(
+  `SELECT id, descricao, concluido, projeto_id
+   FROM tarefas
+   ORDER BY id`
+)
+const lista = resultado.rows
+Versão Drizzle:
+const lista = await db.select().from(tarefas).orderBy(tarefas.id)
+
+Legibilidade:
+	- Strings com SQL solto no código.	
+    - Cadeia fluente e tipada (select().from().orderBy()).
+Controle:	
+    - Total — você escreve exatamente o que o banco executa.	
+    - Menor — o Drizzle decide detalhes da geração.
+Volume de código:
+	- Com mais itens (string + array de valores + .rows).	
+    - Menor e sem mapeamento manual de resultados.
+Proximidade com o banco:
+    - Máxima — é literalmente a linguagem do banco de dados.	
+    - Menor — transforma colunas em objetos JS, mas ainda conceitos do banco (tabelas, orderBy).
